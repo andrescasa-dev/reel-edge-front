@@ -1,3 +1,5 @@
+[![Captura-de-pantalla-2025-11-11-041118.png](https://i.postimg.cc/25mRbv62/Captura-de-pantalla-2025-11-11-041118.png)](https://postimg.cc/nXdwNXqD)
+
 # Casino Research Assistant Frontend
 
 A Next.js application for managing and visualizing casino research data across multiple US states (NJ, MI, PA, WV). The application provides interfaces for tracking missing casinos, comparing promotional offers, and monitoring research status.
@@ -109,3 +111,9 @@ The frontend-backend communication is structured in four layers:
 ## AI Tools and Models
 
 This frontend application does not use AI tools or models directly. The application is a data visualization and management interface that communicates with a backend API. Any AI processing would occur on the backend service, not in this frontend codebase.
+
+# Screenshots
+
+[![Captura-de-pantalla-2025-11-11-041855.png](https://i.postimg.cc/xCvPkJXG/Captura-de-pantalla-2025-11-11-041855.png)](https://postimg.cc/MMGBNGbX)
+[![Captura-de-pantalla-2025-11-11-041253.png](https://i.postimg.cc/j5HD6yQW/Captura-de-pantalla-2025-11-11-041253.png)](https://postimg.cc/7GLPwGRD)
+[![Captura-de-pantalla-2025-11-11-041133.png](https://i.postimg.cc/5yjM9V0V/Captura-de-pantalla-2025-11-11-041133.png)](https://postimg.cc/Fkt6Gw3W)
