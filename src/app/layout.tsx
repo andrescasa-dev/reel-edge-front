@@ -27,7 +27,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <MSWProvider>
-          <QueryClientProvider>{children}</QueryClientProvider>
+        <QueryClientProvider>{children}</QueryClientProvider>
         </MSWProvider>
       </body>
     </html>
