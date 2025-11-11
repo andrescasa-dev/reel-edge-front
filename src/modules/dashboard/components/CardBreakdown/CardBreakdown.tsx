@@ -83,7 +83,28 @@ export function CardBreakdown({
         )}
         {lastUpdated && (
           <div className="pt-2 border-t text-xs text-muted-foreground">
-            Updated {new Date(lastUpdated).toLocaleDateString()}
+            Updated{" "}
+            {(() => {
+              const date = new Date(lastUpdated);
+              const year = date.getUTCFullYear();
+              const monthNames = [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+              ];
+              const month = monthNames[date.getUTCMonth()];
+              const day = date.getUTCDate();
+              return `${month} ${day}, ${year}`;
+            })()}
           </div>
         )}
       </CardContent>

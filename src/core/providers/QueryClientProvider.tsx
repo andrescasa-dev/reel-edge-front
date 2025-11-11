@@ -23,6 +23,7 @@ export function QueryClientProvider({
           queries: {
             staleTime: 5 * 60 * 1000, // 5 minutes
             gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
+            refetchOnWindowFocus: false, // Disable refetch on window focus
             retry: (failureCount, error) => {
               // Don't retry on 4xx errors
               if (error instanceof Error && "status" in error) {

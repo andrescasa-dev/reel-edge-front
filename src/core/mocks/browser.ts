@@ -19,7 +19,7 @@ export async function enableMocking() {
     onUnhandledRequest: (request, print) => {
       // Only log unhandled requests that match our API base URL
       const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
       if (request.url.startsWith(apiBaseUrl)) {
         console.warn(
           "[MSW] ⚠️ Unhandled request:",
@@ -42,7 +42,7 @@ export async function enableMocking() {
   console.log("🚀 [MSW] Mocking enabled");
   console.log(
     "[MSW] API Base URL:",
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001"
+    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000"
   );
   console.log("[MSW] Active handlers count:", worker.listHandlers().length);
 

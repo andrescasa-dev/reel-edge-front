@@ -1,11 +1,19 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { dashboardService } from "../services";
-import type { ResearchStatus } from "../types";
+import type { DashboardStats } from "../types";
+
+const POLLING_INTERVAL = 5000; // 5 seconds
 
 export function useDashboardStats() {
-  return useQuery({
+  // Compute whether polling should be enabled based on research status
+  const shouldPoll = (data: DashboardStats | undefined): boolean => {
+    if (!data?.data) return false;
+    return data.data.some((state) => state.status === "researching");
+  };
+
+  const query = useQuery({
     queryKey: ["dashboard", "state-stats"],
     queryFn: async () => {
       const response = await dashboardService.getStateStats();
@@ -16,18 +24,29 @@ export function useDashboardStats() {
       // Return the full DashboardStats object
       return response.data;
     },
+    refetchInterval: (query) => {
+      const data = query.state.data as DashboardStats | undefined;
+      return shouldPoll(data) ? POLLING_INTERVAL : false;
+    },
   });
+
+  return query;
 }
 
 export function useResearchStatus() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (action: "start" | "stop") =>
-      dashboardService.updateResearchStatus(action),
+    mutationFn: async (action: "start" | "stop") => {
+      const response = await dashboardService.updateResearchStatus(action);
+      if (!response.success) {
+        throw new Error(response.error || "Failed to update research status");
+      }
+      return response.data;
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      // Invalidate and refetch dashboard stats immediately
+      queryClient.invalidateQueries({ queryKey: ["dashboard", "state-stats"] });
     },
   });
 }
-

@@ -11,6 +11,7 @@ export interface DashboardHeaderProps {
   onScheduleToggle?: (enabled: boolean) => void;
   scheduleEnabled?: boolean;
   isResearching?: boolean;
+  isPending?: boolean;
 }
 
 export function DashboardHeader({
@@ -20,6 +21,7 @@ export function DashboardHeader({
   onScheduleToggle,
   scheduleEnabled = false,
   isResearching = false,
+  isPending = false,
 }: DashboardHeaderProps) {
   const [dailyResearch, setDailyResearch] = useState(scheduleEnabled);
 
@@ -50,10 +52,14 @@ export function DashboardHeader({
         </div>
         <Button
           onClick={onRunSearch}
-          disabled={isResearching}
+          disabled={isPending}
           className="w-full sm:w-auto"
         >
-          {isResearching ? "Running Research..." : "Run Research"}
+          {isPending
+            ? "Processing..."
+            : isResearching
+            ? "Stop Research"
+            : "Run Research"}
         </Button>
       </div>
     </div>

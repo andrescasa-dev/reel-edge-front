@@ -6,7 +6,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Must match the API base URL used in http-client.ts
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
 
 export const userHandlers: HttpHandler[] = [
   http.get(`${API_BASE_URL}/users`, async ({ request }) => {
