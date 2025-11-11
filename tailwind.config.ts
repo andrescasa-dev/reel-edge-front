@@ -65,6 +65,40 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      keyframes: {
+        sonar: {
+          "0%": {
+            transform: "scale(1)",
+            opacity: "1",
+          },
+          "50%": {
+            transform: "scale(1.05)",
+            opacity: "0.8",
+          },
+          "100%": {
+            transform: "scale(1)",
+            opacity: "1",
+          },
+        },
+        "sonar-pulse": {
+          "0%": {
+            opacity: "0.8",
+            transform: "scale(0.95)",
+          },
+          "50%": {
+            opacity: "0.4",
+            transform: "scale(1.1)",
+          },
+          "100%": {
+            opacity: "0",
+            transform: "scale(1.3)",
+          },
+        },
+      },
+      animation: {
+        sonar: "sonar 2s ease-in-out infinite",
+        "sonar-pulse": "sonar-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
