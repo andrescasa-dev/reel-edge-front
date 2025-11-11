@@ -1,4 +1,3 @@
-import type { BackendResponse } from "@/core/types";
 import type { DashboardStats } from "../types";
 
 /**
@@ -14,51 +13,13 @@ const API_BASE_URL =
 const DEFAULT_TIMEOUT = 30000; // 30 seconds
 
 /**
- * Checks if response has BackendResponse format (with IsSuccess, Data, Error)
- */
-function isBackendResponse<T>(
-  response: unknown
-): response is BackendResponse<T> {
-  return (
-    typeof response === "object" &&
-    response !== null &&
-    "IsSuccess" in response &&
-    "Data" in response
-  );
-}
-
-/**
- * Transforms backend response format to frontend format
- * Handles both wrapped (BackendResponse) and direct response formats
- */
-function transformResponse<T>(response: BackendResponse<T> | T): {
-  success: boolean;
-  data: T;
-  error?: string;
-} {
-  // If response has BackendResponse format (wrapped)
-  if (isBackendResponse<T>(response)) {
-    return {
-      success: response.IsSuccess,
-      data: response.Data,
-      error: response.Error,
-    };
-  }
-
-  // If response is direct (no wrapper), treat as successful
-  return {
-    success: true,
-    data: response as T,
-  };
-}
-
-/**
  * Makes a server-side HTTP request
+ * Returns data directly (not wrapped)
  */
 async function serverRequest<T>(
   url: string,
   options: RequestInit = {}
-): Promise<{ success: boolean; data: T; error?: string }> {
+): Promise<T> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT);
 
@@ -83,8 +44,8 @@ async function serverRequest<T>(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const jsonResponse = await response.json();
-    return transformResponse<T>(jsonResponse);
+    const data: T = await response.json();
+    return data;
   } catch (error) {
     clearTimeout(timeoutId);
     if (error instanceof Error) {
@@ -106,14 +67,8 @@ export const dashboardServiceServer = {
    */
   async getStateStats(): Promise<DashboardStats> {
     const url = `${API_BASE_URL}/dashboard/state-stats`;
-    const response = await serverRequest<DashboardStats>(url, {
+    return serverRequest<DashboardStats>(url, {
       method: "GET",
     });
-
-    if (!response.success) {
-      throw new Error(response.error || "Failed to fetch dashboard stats");
-    }
-
-    return response.data;
   },
 };

@@ -69,19 +69,15 @@ export const promotionsHandlers: HttpHandler[] = [
 
     return HttpResponse.json(
       {
-        IsSuccess: true,
-        Data: {
-          data: paginated,
-          pagination: {
-            total,
-            limit,
-            page,
-            totalPages,
-            hasNext: page < totalPages,
-            hasPrevious: page > 1,
-          },
+        data: paginated,
+        pagination: {
+          total,
+          limit,
+          page,
+          totalPages,
+          hasNext: page < totalPages,
+          hasPrevious: page > 1,
         },
-        Error: undefined,
       },
       {
         status: 200,
@@ -123,12 +119,8 @@ export const promotionsHandlers: HttpHandler[] = [
       if (!comparison) {
         return HttpResponse.json(
           {
-            IsSuccess: false,
-            Data: null,
-            Error: {
-              message: "Comparison not found",
-              code: "NOT_FOUND",
-            },
+            message: "Comparison not found",
+            code: "NOT_FOUND",
           },
           {
             status: 404,
@@ -164,13 +156,9 @@ export const promotionsHandlers: HttpHandler[] = [
 
       return HttpResponse.json(
         {
-          IsSuccess: true,
-          Data: {
-            success: true,
-            message: `Comparison ${body.action}ed successfully`,
-            comparison: updatedComparison,
-          },
-          Error: undefined,
+          success: true,
+          message: `Comparison ${body.action}ed successfully`,
+          comparison: updatedComparison,
         },
         {
           status: 200,

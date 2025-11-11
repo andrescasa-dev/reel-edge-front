@@ -28,12 +28,8 @@ export const dashboardHandlers: HttpHandler[] = [
 
     return HttpResponse.json(
       {
-        IsSuccess: true,
-        Data: {
-          data: statsWithProgress,
-          timestamp: new Date().toISOString(),
-        },
-        Error: undefined,
+        data: statsWithProgress,
+        timestamp: new Date().toISOString(),
       },
       {
         status: 200,
@@ -65,15 +61,11 @@ export const dashboardHandlers: HttpHandler[] = [
 
       return HttpResponse.json(
         {
-          IsSuccess: true,
-          Data: {
-            success: true,
-            message: `Research ${
-              body.action === "start" ? "started" : "stopped"
-            } successfully`,
-            status: body.action === "start" ? "researching" : "idle",
-          },
-          Error: undefined,
+          success: true,
+          message: `Research ${
+            body.action === "start" ? "started" : "stopped"
+          } successfully`,
+          status: body.action === "start" ? "researching" : "idle",
         },
         {
           status: 200,

@@ -17,12 +17,8 @@ export function useDashboardStats() {
     queryKey: ["dashboard", "state-stats"],
     queryFn: async () => {
       const response = await dashboardService.getStateStats();
-      if (!response.success) {
-        throw new Error(response.error || "Failed to fetch dashboard stats");
-      }
-      // Response data is DashboardStats { data: StateStats[], timestamp: string }
-      // Return the full DashboardStats object
-      return response.data;
+      // Response is DashboardStats { data: StateStats[], timestamp: string }
+      return response;
     },
     refetchInterval: (query) => {
       const data = query.state.data as DashboardStats | undefined;
@@ -39,10 +35,7 @@ export function useResearchStatus() {
   return useMutation({
     mutationFn: async (action: "start" | "stop") => {
       const response = await dashboardService.updateResearchStatus(action);
-      if (!response.success) {
-        throw new Error(response.error || "Failed to update research status");
-      }
-      return response.data;
+      return response;
     },
     onSuccess: (data, action) => {
       // Invalidate all dashboard queries to get fresh data immediately

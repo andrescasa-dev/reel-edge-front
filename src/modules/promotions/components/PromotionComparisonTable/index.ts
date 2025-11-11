@@ -1,0 +1,2 @@
+export { PromotionComparisonTable } from "./PromotionComparisonTable";
+
