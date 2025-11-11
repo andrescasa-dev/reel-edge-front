@@ -21,7 +21,7 @@ API_BASE_URL=http://localhost:3000
 
 `NEXT_PUBLIC_ENABLE_MOCKS` enables MSW (Mock Service Worker) to intercept API requests and return mock data, useful for frontend development without a backend. Set to `false` when connecting to a real API.
 
-Open [http://localhost:3001](http://localhost:3001) in your browser.
+Open [http://localhost:3001](http://localhost:3001) in your browser. The home route is `/dashboard`.
 
 ## Setup
 
@@ -58,7 +58,7 @@ API_BASE_URL=http://localhost:3000
 npm run dev -- -p 3001
 ```
 
-Open [http://localhost:3001](http://localhost:3001) in your browser.
+Open [http://localhost:3001](http://localhost:3001) in your browser. The home route is `/dashboard`.
 
 ### Production Build
 
