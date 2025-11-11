@@ -37,6 +37,7 @@ export async function enableMocking() {
       },
     },
     quiet: false, // Enable MSW's own logging for debugging
+    waitUntilReady: true, // Wait for service worker to be ready
   });
 
   console.log("🚀 [MSW] Mocking enabled");

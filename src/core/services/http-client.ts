@@ -145,6 +145,17 @@ export const httpClient = {
   },
 
   /**
+   * PATCH request
+   */
+  async patch<T>(endpoint: string, body?: unknown): Promise<ApiResponse<T>> {
+    const url = `${API_BASE_URL}${endpoint}`;
+    return request<T>(url, {
+      method: "PATCH",
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  },
+
+  /**
    * DELETE request
    */
   async delete<T>(endpoint: string): Promise<ApiResponse<T>> {

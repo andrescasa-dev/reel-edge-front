@@ -53,5 +53,17 @@ export function MSWProvider({ children }: { children: React.ReactNode }) {
     initMSW();
   }, []);
 
+  // Only render children after MSW is ready (or if mocks are disabled)
+  if (!mswReady && process.env.NODE_ENV === "development" && isMockMode()) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-2"></div>
+          <p className="text-sm text-muted-foreground">Initializing mocks...</p>
+        </div>
+      </div>
+    );
+  }
+
   return <>{children}</>;
 }
