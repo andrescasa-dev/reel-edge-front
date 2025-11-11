@@ -1,33 +1,47 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { toast as sonnerToast } from "sonner";
 
-export interface Toast {
-  id: string;
+export type ToastVariant =
+  | "default"
+  | "destructive"
+  | "success"
+  | "info"
+  | "warning";
+
+export interface ToastOptions {
   title: string;
   description?: string;
-  variant?: "default" | "destructive";
+  variant?: ToastVariant;
 }
 
 export function useToast() {
-  const [toasts, setToasts] = useState<Toast[]>([]);
+  const toast = ({ title, description, variant = "default" }: ToastOptions) => {
+    const message = description ? `${title}\n${description}` : title;
 
-  const toast = useCallback(
-    ({ title, description, variant = "default" }: Omit<Toast, "id">) => {
-      const id = Math.random().toString(36).substring(7);
-      const newToast: Toast = { id, title, description, variant };
-      setToasts((prev) => [...prev, newToast]);
+    switch (variant) {
+      case "success":
+        return sonnerToast.success(title, {
+          description,
+        });
+      case "destructive":
+        return sonnerToast.error(title, {
+          description,
+        });
+      case "warning":
+        return sonnerToast.warning(title, {
+          description,
+        });
+      case "info":
+        return sonnerToast.info(title, {
+          description,
+        });
+      default:
+        return sonnerToast(title, {
+          description,
+        });
+    }
+  };
 
-      // Auto-dismiss after 3 seconds
-      setTimeout(() => {
-        setToasts((prev) => prev.filter((t) => t.id !== id));
-      }, 3000);
-
-      return { id };
-    },
-    []
-  );
-
-  return { toast, toasts };
+  return { toast };
 }
-

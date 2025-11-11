@@ -1,3 +1,6 @@
+// Initialize MSW on server before making API calls
+import "@/core/mocks/init-server";
+
 import { dashboardServiceServer } from "@/modules/dashboard/services/dashboardService.server";
 import { DashboardContent } from "@/modules/dashboard/components/DashboardContent/DashboardContent";
 

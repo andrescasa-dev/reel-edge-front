@@ -44,9 +44,45 @@ export function useResearchStatus() {
       }
       return response.data;
     },
-    onSuccess: () => {
-      // Invalidate and refetch dashboard stats immediately
-      queryClient.invalidateQueries({ queryKey: ["dashboard", "state-stats"] });
+    onSuccess: (data, action) => {
+      // Invalidate all dashboard queries to get fresh data immediately
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+
+      // If stopping, optimistically update the cache to reflect "idle" status
+      if (action === "stop") {
+        queryClient.setQueriesData(
+          { queryKey: ["dashboard", "state-stats"] },
+          (oldData: DashboardStats | undefined) => {
+            if (!oldData?.data) return oldData;
+
+            return {
+              ...oldData,
+              data: oldData.data.map((state) => ({
+                ...state,
+                status: "idle" as const,
+              })),
+              timestamp: new Date().toISOString(),
+            };
+          }
+        );
+
+        // Also update the polling query
+        queryClient.setQueriesData(
+          { queryKey: ["dashboard", "state-stats", "polling"] },
+          (oldData: DashboardStats | undefined) => {
+            if (!oldData?.data) return oldData;
+
+            return {
+              ...oldData,
+              data: oldData.data.map((state) => ({
+                ...state,
+                status: "idle" as const,
+              })),
+              timestamp: new Date().toISOString(),
+            };
+          }
+        );
+      }
     },
   });
 }

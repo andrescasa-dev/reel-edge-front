@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { QueryClientProvider, MSWProvider } from "@/core/providers";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -27,8 +28,9 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <MSWProvider>
-        <QueryClientProvider>{children}</QueryClientProvider>
+          <QueryClientProvider>{children}</QueryClientProvider>
         </MSWProvider>
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );

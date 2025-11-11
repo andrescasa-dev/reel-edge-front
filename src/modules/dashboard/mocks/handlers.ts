@@ -1,6 +1,11 @@
 import { http, HttpResponse, type HttpHandler } from "msw";
 import { mockDashboardStats } from "./data";
 import { mockConfig } from "@/core/mocks/config";
+import {
+  startJob,
+  stopJob,
+  getStateStatsWithJobProgress,
+} from "@/core/mocks/job-simulator";
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -16,10 +21,18 @@ export const dashboardHandlers: HttpHandler[] = [
       mockConfig.delayMin;
     await delay(delayTime);
 
+    // Get stats with current job progress
+    const statsWithProgress = getStateStatsWithJobProgress(
+      mockDashboardStats.data
+    );
+
     return HttpResponse.json(
       {
         IsSuccess: true,
-        Data: mockDashboardStats,
+        Data: {
+          data: statsWithProgress,
+          timestamp: new Date().toISOString(),
+        },
         Error: undefined,
       },
       {
@@ -42,6 +55,13 @@ export const dashboardHandlers: HttpHandler[] = [
         Math.random() * (mockConfig.delayMax - mockConfig.delayMin) +
         mockConfig.delayMin;
       await delay(delayTime);
+
+      // Start or stop the job simulator
+      if (body.action === "start") {
+        startJob();
+      } else {
+        stopJob();
+      }
 
       return HttpResponse.json(
         {
