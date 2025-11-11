@@ -1,0 +1,916 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/dashboard/state-stats": {
+      "get": {
+        "description": "Returns aggregated statistics for all states including casino counts, promotion counts, and research status. The research status field indicates the global research status that applies to all states.",
+        "operationId": "DashboardController_getStateStats",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StateStatsListResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "summary": "Get state-level statistics",
+        "tags": [
+          "Dashboard"
+        ]
+      }
+    },
+    "/dashboard/research-status": {
+      "post": {
+        "description": "Triggers or stops research process for all states (NJ, MI, PA, WV) simultaneously",
+        "operationId": "DashboardController_updateResearchStatus",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartResearchDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Research status updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResearchStatusResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "summary": "Update global research status",
+        "tags": [
+          "Dashboard"
+        ]
+      }
+    },
+    "/casinos/search": {
+      "get": {
+        "operationId": "CasinoSearchController_searchAllStates",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "CasinoSearch"
+        ]
+      }
+    },
+    "/missing-casinos": {
+      "get": {
+        "description": "Returns a list of casinos found in regulatory sources but not present in the database",
+        "operationId": "MissingCasinosController_getMissingCasinos",
+        "parameters": [
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "Number of results to skip",
+            "schema": {
+              "example": 0,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Maximum number of results to return",
+            "schema": {
+              "example": 50,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search casinos by name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "description": "Filter by state abbreviation",
+            "schema": {
+              "enum": [
+                "NJ",
+                "MI",
+                "PA",
+                "WV"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissingCasinosListResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "summary": "List missing casinos",
+        "tags": [
+          "Missing Casinos"
+        ]
+      }
+    },
+    "/promotions/research": {
+      "post": {
+        "operationId": "PromotionResearchController_researchPromotions",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "PromotionResearch"
+        ]
+      }
+    },
+    "/promotions/comparisons": {
+      "get": {
+        "description": "Returns a list of promotion comparisons between current database promotions and newly discovered promotions",
+        "operationId": "PromotionComparisonsController_getPromotionComparisons",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Maximum number of results to return",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "promotion_id",
+            "required": false,
+            "in": "query",
+            "description": "Search by promotion ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Filter by comparison status",
+            "schema": {
+              "enum": [
+                "pending",
+                "updated",
+                "reviewed",
+                "ignored"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "insight",
+            "required": false,
+            "in": "query",
+            "description": "Filter by comparison insight type",
+            "schema": {
+              "enum": [
+                "better",
+                "alternative",
+                "new"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "offer_type",
+            "required": false,
+            "in": "query",
+            "description": "Filter by offer type",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "description": "Filter by state abbreviation",
+            "schema": {
+              "enum": [
+                "NJ",
+                "MI",
+                "PA",
+                "WV"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "casino",
+            "required": false,
+            "in": "query",
+            "description": "Filter by casino name",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionComparisonsListResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "summary": "List promotion comparisons",
+        "tags": [
+          "Promotions"
+        ]
+      }
+    },
+    "/promotions/comparisons/{comparisonId}": {
+      "patch": {
+        "description": "Updates the status of a promotion comparison (update, add, ignore)",
+        "operationId": "PromotionComparisonsController_updatePromotionComparison",
+        "parameters": [
+          {
+            "name": "comparisonId",
+            "required": true,
+            "in": "path",
+            "description": "Unique identifier of the promotion comparison",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateComparisonDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Comparison updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateComparisonResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "summary": "Update promotion comparison status",
+        "tags": [
+          "Promotions"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Casino Research Assistant API",
+    "description": "API for managing casino research data, missing casinos discovery, and promotion comparisons across NJ, MI, PA, and WV jurisdictions",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support",
+      "url": "",
+      "email": "api@casinoresearch.com"
+    }
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "https://api.casinoresearch.com/v1",
+      "description": "Production server"
+    },
+    {
+      "url": "https://staging-api.casinoresearch.com/v1",
+      "description": "Staging server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "NextAuthSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "next-auth.session-token",
+        "description": "NextAuth.js session cookie for authentication. The session token is automatically included in requests via HTTP-only cookies."
+      }
+    },
+    "schemas": {
+      "StateDto": {
+        "type": "object",
+        "properties": {
+          "Abbreviation": {
+            "type": "string",
+            "enum": [
+              "NJ",
+              "MI",
+              "PA",
+              "WV"
+            ],
+            "description": "Two-letter state code",
+            "example": "NJ"
+          },
+          "Name": {
+            "type": "string",
+            "description": "Full state name",
+            "example": "New Jersey"
+          }
+        },
+        "required": [
+          "Abbreviation",
+          "Name"
+        ]
+      },
+      "StateStatsResponseDto": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "$ref": "#/components/schemas/StateDto"
+          },
+          "casinosTracked": {
+            "type": "number",
+            "description": "Number of casinos currently being tracked",
+            "example": 25
+          },
+          "promotionsActive": {
+            "type": "number",
+            "description": "Number of active promotions",
+            "example": 50
+          },
+          "lastUpdated": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp of last data update",
+            "example": "2024-01-15T10:30:00Z"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "idle",
+              "researching"
+            ],
+            "description": "Current research status",
+            "example": "idle"
+          },
+          "missingCasinos": {
+            "type": "number",
+            "description": "Number of casinos found but not in database",
+            "example": 5
+          },
+          "pendingComparisons": {
+            "type": "number",
+            "description": "Number of pending promotion comparisons",
+            "example": 10
+          }
+        },
+        "required": [
+          "state",
+          "casinosTracked",
+          "promotionsActive",
+          "lastUpdated",
+          "status"
+        ]
+      },
+      "StateStatsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StateStatsResponseDto"
+            }
+          },
+          "timestamp": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-15T10:30:00Z"
+          }
+        },
+        "required": [
+          "data",
+          "timestamp"
+        ]
+      },
+      "ResearchAction": {
+        "type": "string",
+        "enum": [
+          "start",
+          "stop"
+        ],
+        "description": "Action to perform - starts or stops research for all states"
+      },
+      "StartResearchDto": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "description": "Action to perform - starts or stops research for all states",
+            "example": "start",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResearchAction"
+              }
+            ]
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "ResearchStatusResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Research started successfully"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "researching",
+              "idle"
+            ],
+            "description": "Global research status for all states",
+            "example": "researching"
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "status"
+        ]
+      },
+      "MissingCasinoStateDto": {
+        "type": "object",
+        "properties": {
+          "Abbreviation": {
+            "type": "string",
+            "enum": [
+              "NJ",
+              "MI",
+              "PA",
+              "WV"
+            ],
+            "description": "Two-letter state code",
+            "example": "NJ"
+          },
+          "Name": {
+            "type": "string",
+            "description": "Full state name",
+            "example": "New Jersey"
+          }
+        },
+        "required": [
+          "Abbreviation",
+          "Name"
+        ]
+      },
+      "MissingCasinoResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier",
+            "example": "casino-123"
+          },
+          "name": {
+            "type": "string",
+            "description": "Casino name",
+            "example": "Test Casino"
+          },
+          "state": {
+            "$ref": "#/components/schemas/MissingCasinoStateDto"
+          },
+          "source": {
+            "type": "string",
+            "description": "Source where the casino was found",
+            "example": "Gaming Commission"
+          },
+          "promotionsFound": {
+            "type": "number",
+            "description": "Number of promotions discovered for this casino",
+            "example": 3
+          },
+          "discoveredAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "When the casino was first discovered",
+            "example": "2024-01-15T10:30:00Z"
+          },
+          "website": {
+            "type": "string",
+            "description": "Casino website URL",
+            "example": "https://casino.com"
+          },
+          "regulatoryId": {
+            "type": "string",
+            "description": "Regulatory identification number",
+            "example": "NJ-001"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "state",
+          "source",
+          "promotionsFound",
+          "discoveredAt"
+        ]
+      },
+      "PaginationDto": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number",
+            "description": "Total number of items available",
+            "example": 100
+          },
+          "limit": {
+            "type": "number",
+            "description": "Maximum number of items returned",
+            "example": 50
+          },
+          "page": {
+            "type": "number",
+            "description": "Current page number (1-based)",
+            "example": 1
+          },
+          "totalPages": {
+            "type": "number",
+            "description": "Total number of pages available",
+            "example": 2
+          },
+          "hasNext": {
+            "type": "boolean",
+            "description": "Whether there are more items available",
+            "example": true
+          },
+          "hasPrevious": {
+            "type": "boolean",
+            "description": "Whether there are previous items available",
+            "example": false
+          }
+        },
+        "required": [
+          "total",
+          "limit",
+          "page",
+          "totalPages",
+          "hasNext",
+          "hasPrevious"
+        ]
+      },
+      "MissingCasinosListResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MissingCasinoResponseDto"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationDto"
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
+      "PromotionComparisonStateDto": {
+        "type": "object",
+        "properties": {
+          "Abbreviation": {
+            "type": "string",
+            "enum": [
+              "NJ",
+              "MI",
+              "PA",
+              "WV"
+            ],
+            "description": "Two-letter state code",
+            "example": "NJ"
+          },
+          "Name": {
+            "type": "string",
+            "description": "Full state name",
+            "example": "New Jersey"
+          }
+        },
+        "required": [
+          "Abbreviation",
+          "Name"
+        ]
+      },
+      "CasinoDto": {
+        "type": "object",
+        "properties": {
+          "casinodb_id": {
+            "type": "number",
+            "description": "Casino database ID",
+            "example": 1
+          },
+          "Name": {
+            "type": "string",
+            "description": "Casino name",
+            "example": "Test Casino"
+          },
+          "state": {
+            "$ref": "#/components/schemas/PromotionComparisonStateDto"
+          }
+        },
+        "required": [
+          "casinodb_id",
+          "Name",
+          "state"
+        ]
+      },
+      "PromotionDto": {
+        "type": "object",
+        "properties": {
+          "Offer_Name": {
+            "type": "string",
+            "description": "Name of the promotional offer",
+            "example": "Welcome Bonus"
+          },
+          "offer_type": {
+            "type": "string",
+            "description": "Type of offer (e.g., Deposit Bonus, No Deposit Bonus, Free Spins)",
+            "example": "Deposit Bonus"
+          },
+          "Expected_Deposit": {
+            "type": "number",
+            "description": "Expected deposit amount required",
+            "example": 100
+          },
+          "Expected_Bonus": {
+            "type": "number",
+            "description": "Expected bonus amount",
+            "example": 50
+          },
+          "terms_and_conditions": {
+            "type": "string",
+            "description": "Terms and conditions text",
+            "example": "Standard terms apply"
+          },
+          "wagering_requirements": {
+            "type": "string",
+            "description": "Wagering requirements",
+            "example": "20x"
+          },
+          "valid_from": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Promotion start date",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "valid_until": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Promotion end date",
+            "example": "2024-12-31T23:59:59Z"
+          }
+        },
+        "required": [
+          "Offer_Name",
+          "offer_type",
+          "Expected_Deposit",
+          "Expected_Bonus"
+        ]
+      },
+      "PromotionComparisonResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique comparison identifier (6 char UUID)",
+            "example": "comp-123"
+          },
+          "casino": {
+            "$ref": "#/components/schemas/CasinoDto"
+          },
+          "currentPromotion": {
+            "nullable": true,
+            "description": "Current promotion in database, null if comparison type is 'new'",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PromotionDto"
+              }
+            ]
+          },
+          "discoveredPromotion": {
+            "$ref": "#/components/schemas/PromotionDto"
+          },
+          "comparisonType": {
+            "type": "string",
+            "enum": [
+              "better",
+              "alternative",
+              "new"
+            ],
+            "description": "Type of insight about the discovered promotion",
+            "example": "better"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "updated",
+              "reviewed",
+              "ignored"
+            ],
+            "description": "Current status of the comparison",
+            "example": "pending"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "When the comparison was created",
+            "example": "2024-01-15T10:30:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "When the comparison was last updated",
+            "example": "2024-01-15T10:30:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "casino",
+          "currentPromotion",
+          "discoveredPromotion",
+          "comparisonType",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PromotionComparisonsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PromotionComparisonResponseDto"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationDto"
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
+      "UpdateComparisonAction": {
+        "type": "string",
+        "enum": [
+          "update",
+          "add",
+          "ignore"
+        ],
+        "description": "Action to perform on the comparison"
+      },
+      "UpdateComparisonDto": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "description": "Action to perform on the comparison",
+            "example": "update",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdateComparisonAction"
+              }
+            ]
+          },
+          "notes": {
+            "type": "string",
+            "description": "Optional notes about the action",
+            "example": "Manually reviewed and updated"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "UpdateComparisonResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Comparison updated successfully"
+          },
+          "comparison": {
+            "$ref": "#/components/schemas/PromotionComparisonResponseDto"
+          }
+        },
+        "required": [
+          "success",
+          "message",
+          "comparison"
+        ]
+      }
+    }
+  }
+}
