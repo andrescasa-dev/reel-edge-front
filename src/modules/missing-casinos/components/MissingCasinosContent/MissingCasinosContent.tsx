@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/core/components/ui/card";
-import { TooltipProvider } from "@/core/components/ui/tooltip";
 import { MissingCasinoRow } from "../MissingCasinoRow";
 import { MissingCasinosFilters } from "../MissingCasinosFilters";
 import { useMissingCasinosFlat } from "../../hooks/useMissingCasinos";
@@ -98,13 +97,12 @@ export function MissingCasinosContent() {
               <p className="text-muted-foreground">No casinos found</p>
             </div>
           ) : (
-            <TooltipProvider>
-              <>
-                <div className="divide-y divide-border">
-                  {data.map((casino) => (
-                    <MissingCasinoRow key={casino.id} casino={casino} />
-                  ))}
-                </div>
+            <>
+              <div className="divide-y divide-border">
+                {data.map((casino) => (
+                  <MissingCasinoRow key={casino.id} casino={casino} />
+                ))}
+              </div>
               {/* Infinite scroll trigger */}
               <div ref={observerTarget} className="h-4" />
               {isFetchingNextPage && (
@@ -112,15 +110,14 @@ export function MissingCasinosContent() {
                   <p className="text-sm text-muted-foreground">Loading more...</p>
                 </div>
               )}
-                {!hasNextPage && data.length > 0 && (
-                  <div className="flex items-center justify-center p-4">
-                    <p className="text-sm text-muted-foreground">
-                      Showing {data.length} of {total} casinos
-                    </p>
-                  </div>
-                )}
-              </>
-            </TooltipProvider>
+              {!hasNextPage && data.length > 0 && (
+                <div className="flex items-center justify-center p-4">
+                  <p className="text-sm text-muted-foreground">
+                    Showing {data.length} of {total} casinos
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </CardContent>
       </Card>

@@ -1,12 +1,7 @@
 "use client";
 
 import { Badge } from "@/core/components/ui/badge";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/core/components/ui/tooltip";
-import { BadgeInfo } from "lucide-react";
+import { Gift, MapPin } from "lucide-react";
 import type { MissingCasino } from "../../types";
 
 interface MissingCasinoRowProps {
@@ -15,42 +10,37 @@ interface MissingCasinoRowProps {
 
 export function MissingCasinoRow({ casino }: MissingCasinoRowProps) {
   return (
-    <div className="flex h-12 items-center justify-between border-b border-border/50 pb-[0.8px] pt-0 px-3 gap-3">
-      {/* Left section: Casino name */}
+    <div className="group flex items-center gap-4 px-4 py-3 border-b border-border/50 hover:bg-muted/30 transition-colors duration-150">
+      {/* Main Content Area - Casino Name (Primary) */}
       <div className="flex-1 min-w-0">
-        <p className="text-base leading-6 text-foreground truncate">
+        <h3 className="text-sm font-semibold text-foreground truncate leading-5 mb-0.5">
           {casino.name}
+        </h3>
+        <p className="text-xs text-muted-foreground truncate leading-4">
+          {casino.source}
         </p>
       </div>
 
-      {/* Middle section: Source with truncation and tooltip */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div className="h-5 max-w-[70ch] min-w-0">
-            <p className="text-sm leading-5 text-muted-foreground truncate">
-              {casino.source}
-            </p>
-          </div>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>{casino.source}</p>
-        </TooltipContent>
-      </Tooltip>
+      {/* Right Section - Metadata Group */}
+      <div className="flex items-center gap-3 shrink-0">
+        {/* State Badge */}
+        <div className="flex items-center gap-1.5">
+          <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+          <Badge
+            variant="outline"
+            className="h-6 px-2 text-xs font-medium border-border/50 rounded-md"
+          >
+            {casino.state.Abbreviation}
+          </Badge>
+        </div>
 
-      {/* State badge */}
-      <Badge
-        variant="outline"
-        className="h-[21.587px] rounded-md px-[8.8px] py-[2.8px] text-xs leading-4 shrink-0 border-border/50"
-      >
-        {casino.state.Abbreviation}
-      </Badge>
-
-      {/* Right section: Promotions icon + count */}
-      <div className="flex items-center gap-2 h-5 shrink-0">
-        <BadgeInfo className="h-3 w-3 shrink-0 text-foreground" />
-        <span className="text-sm leading-5 text-foreground whitespace-nowrap">
-          {casino.promotionsFound}
-        </span>
+        {/* Promotions Count */}
+        <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-muted/50 group-hover:bg-muted/70 transition-colors">
+          <Gift className="h-3.5 w-3.5 text-muted-foreground" />
+          <span className="text-xs font-medium text-foreground tabular-nums">
+            {casino.promotionsFound}
+          </span>
+        </div>
       </div>
     </div>
   );
