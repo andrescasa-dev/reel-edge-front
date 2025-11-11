@@ -1,8 +1,6 @@
-import type { BackendResponse, ApiResponse } from "../types";
-
 /**
  * HTTP Client
- * Low-level HTTP communication wrapper with automatic response transformation
+ * Low-level HTTP communication wrapper that returns data directly
  */
 
 const API_BASE_URL =
@@ -40,19 +38,6 @@ function buildQueryString(params?: Record<string, unknown>): string {
 }
 
 /**
- * Transforms backend response format to frontend format
- */
-function transformResponse<T>(
-  backendResponse: BackendResponse<T>
-): ApiResponse<T> {
-  return {
-    success: backendResponse.IsSuccess,
-    data: backendResponse.Data,
-    error: backendResponse.Error,
-  };
-}
-
-/**
  * Creates a timeout promise that rejects after specified milliseconds
  */
 function createTimeout(timeout: number): Promise<never> {
@@ -65,11 +50,12 @@ function createTimeout(timeout: number): Promise<never> {
 
 /**
  * Makes an HTTP request with timeout and error handling
+ * Returns the response data directly (not wrapped)
  */
 async function request<T>(
   url: string,
   options: RequestInit = {}
-): Promise<ApiResponse<T>> {
+): Promise<T> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT);
 
@@ -92,8 +78,8 @@ async function request<T>(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const backendResponse: BackendResponse<T> = await response.json();
-    return transformResponse(backendResponse);
+    const data: T = await response.json();
+    return data;
   } catch (error) {
     clearTimeout(timeoutId);
     if (error instanceof Error) {
@@ -108,6 +94,7 @@ async function request<T>(
 
 /**
  * HTTP Client with type-safe methods
+ * Returns data directly from the API (not wrapped in response format)
  */
 export const httpClient = {
   /**
@@ -116,7 +103,7 @@ export const httpClient = {
   async get<T>(
     endpoint: string,
     params?: Record<string, unknown>
-  ): Promise<ApiResponse<T>> {
+  ): Promise<T> {
     const queryString = buildQueryString(params);
     const url = `${API_BASE_URL}${endpoint}${queryString}`;
     return request<T>(url, { method: "GET" });
@@ -125,7 +112,7 @@ export const httpClient = {
   /**
    * POST request
    */
-  async post<T>(endpoint: string, body?: unknown): Promise<ApiResponse<T>> {
+  async post<T>(endpoint: string, body?: unknown): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
     return request<T>(url, {
       method: "POST",
@@ -136,7 +123,7 @@ export const httpClient = {
   /**
    * PUT request
    */
-  async put<T>(endpoint: string, body?: unknown): Promise<ApiResponse<T>> {
+  async put<T>(endpoint: string, body?: unknown): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
     return request<T>(url, {
       method: "PUT",
@@ -147,7 +134,7 @@ export const httpClient = {
   /**
    * PATCH request
    */
-  async patch<T>(endpoint: string, body?: unknown): Promise<ApiResponse<T>> {
+  async patch<T>(endpoint: string, body?: unknown): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
     return request<T>(url, {
       method: "PATCH",
@@ -158,7 +145,7 @@ export const httpClient = {
   /**
    * DELETE request
    */
-  async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
+  async delete<T>(endpoint: string): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
     return request<T>(url, { method: "DELETE" });
   },

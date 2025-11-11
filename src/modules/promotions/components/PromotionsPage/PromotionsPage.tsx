@@ -50,12 +50,8 @@ export function PromotionsPage() {
     setError(null);
     try {
       const response = await promotionsService.getComparisons(currentFilters);
-      if (response.success && response.data) {
-        setComparisons(response.data.data);
-        setPagination(response.data.pagination);
-      } else {
-        setError(response.error || "Failed to fetch comparisons");
-      }
+      setComparisons(response.data);
+      setPagination(response.pagination);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {

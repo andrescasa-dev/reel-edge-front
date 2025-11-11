@@ -22,12 +22,7 @@ export function useMissingCasinos(params?: UseMissingCasinosParams) {
       };
 
       const response = await missingCasinosService.getMissingCasinos(queryParams);
-
-      if (!response.success) {
-        throw new Error(response.error || "Failed to fetch missing casinos");
-      }
-
-      return response.data;
+      return response;
     },
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage.pagination.hasNext) {

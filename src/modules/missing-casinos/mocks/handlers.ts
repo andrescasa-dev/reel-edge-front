@@ -49,19 +49,15 @@ export const missingCasinosHandlers: HttpHandler[] = [
 
     return HttpResponse.json(
       {
-        IsSuccess: true,
-        Data: {
-          data: paginated,
-          pagination: {
-            total,
-            limit,
-            page: currentPage,
-            totalPages,
-            hasNext: offset + limit < total,
-            hasPrevious: offset > 0,
-          },
+        data: paginated,
+        pagination: {
+          total,
+          limit,
+          page: currentPage,
+          totalPages,
+          hasNext: offset + limit < total,
+          hasPrevious: offset > 0,
         },
-        Error: undefined,
       },
       {
         status: 200,

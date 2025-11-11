@@ -15,12 +15,8 @@ export function useUsers() {
     queryFn: async () => {
       const response = await userService.getUsers();
 
-      if (!response.success) {
-        throw new Error(response.error || "Failed to fetch users");
-      }
-
       // Transform backend users to frontend format
-      return response.data.map(userAdapter) as User[];
+      return response.map(userAdapter) as User[];
     },
   });
 }

@@ -29,22 +29,15 @@ export const userHandlers: HttpHandler[] = [
       "users"
     );
 
-    return HttpResponse.json(
-      {
-        IsSuccess: true,
-        Data: mockUsers,
-        Error: undefined,
+    return HttpResponse.json(mockUsers, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
       },
-      {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
-        },
-      }
-    );
+    });
   }),
 
   // Also handle OPTIONS for CORS preflight

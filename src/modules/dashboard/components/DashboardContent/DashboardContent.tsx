@@ -41,10 +41,7 @@ export function DashboardContent({ initialStats }: DashboardContentProps) {
     queryKey: ["dashboard", "state-stats", "polling"],
     queryFn: async () => {
       const response = await dashboardService.getStateStats();
-      if (!response.success) {
-        throw new Error(response.error || "Failed to fetch dashboard stats");
-      }
-      return response.data;
+      return response;
     },
     enabled: initialIsResearching || researchStarted,
     refetchInterval: (query) => {
