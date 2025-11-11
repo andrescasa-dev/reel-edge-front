@@ -158,11 +158,6 @@ export function DashboardContent({ initialStats }: DashboardContentProps) {
     }
   };
 
-  const handleScheduleToggle = (enabled: boolean) => {
-    // This would typically update the schedule setting
-    console.log("Schedule toggled:", enabled);
-  };
-
   const lastRun = useMemo(() => {
     if (initialStats?.timestamp) {
       return new Date(initialStats.timestamp);
@@ -184,8 +179,6 @@ export function DashboardContent({ initialStats }: DashboardContentProps) {
           title="Casino Research Dashboard"
           description="Monitor casino databases and promotions across NJ, MI, PA, and WV"
           onRunSearch={handleRunSearch}
-          onScheduleToggle={handleScheduleToggle}
-          scheduleEnabled={false}
           isResearching={isResearching}
           isPending={researchMutation.isPending || isResearching}
         />
