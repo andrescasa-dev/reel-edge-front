@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Casino Research Assistant Frontend
 
-## Getting Started
+A Next.js application for managing and visualizing casino research data across multiple US states (NJ, MI, PA, WV). The application provides interfaces for tracking missing casinos, comparing promotional offers, and monitoring research status.
 
-First, run the development server:
+## Quick Start
+
+**Note**: It's recommended to start the backend first on port 3000, then run the frontend on port 3001.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev -- -p 3001
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create a `.env.local` file:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+NEXT_PUBLIC_ENABLE_MOCKS=false
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
+API_BASE_URL=http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`NEXT_PUBLIC_ENABLE_MOCKS` enables MSW (Mock Service Worker) to intercept API requests and return mock data, useful for frontend development without a backend. Set to `false` when connecting to a real API.
 
-## Learn More
+Open [http://localhost:3001](http://localhost:3001) in your browser.
 
-To learn more about Next.js, take a look at the following resources:
+## Setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Prerequisites
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Node.js 20 or higher
+- npm, yarn, pnpm, or bun
 
-## Deploy on Vercel
+### Installation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm install
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Environment Variables
+
+Create a `.env.local` file in the root directory:
+
+```env
+NEXT_PUBLIC_ENABLE_MOCKS=false
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
+API_BASE_URL=http://localhost:3000
+```
+
+- `NEXT_PUBLIC_ENABLE_MOCKS`: Enable MSW mocking (set to `false` for production)
+- `NEXT_PUBLIC_API_BASE_URL`: Backend API base URL (accessible in browser)
+- `API_BASE_URL`: Backend API base URL (server-side only)
+
+### Development
+
+**Note**: It's recommended to start the backend first on port 3000, then run the frontend on port 3001.
+
+```bash
+npm run dev -- -p 3001
+```
+
+Open [http://localhost:3001](http://localhost:3001) in your browser.
+
+### Production Build
+
+```bash
+npm run build
+npm start
+```
+
+### Storybook
+
+```bash
+npm run storybook
+```
+
+## Architecture
+
+### Modular Structure
+
+The project follows a modular architecture with clear separation of concerns:
+
+- **`src/app/`**: Next.js App Router - routing and page composition only
+- **`src/core/`**: Shared infrastructure (components, services, utilities, types)
+- **`src/modules/`**: Feature modules organized by domain (dashboard, missing-casinos, promotions)
+
+### Communication Layer
+
+The frontend-backend communication is structured in four layers:
+
+1. **HTTP Client** (`core/services/http-client.ts`): Low-level HTTP wrapper with automatic response transformation
+2. **Services** (`modules/{domain}/services/`): Domain-specific API calls
+3. **Adapters** (`modules/{domain}/adapters/`): Data transformation between backend (PascalCase) and frontend (camelCase) formats
+4. **Hooks** (`modules/{domain}/hooks/`): React Query integration for data fetching and caching
+
+### Key Technical Decisions
+
+**Server Components First**: Pages default to server components, using client components only when necessary (interactivity, hooks, browser APIs).
+
+**CSS Modules**: All component styles use CSS modules for scoped styling and preventing conflicts.
+
+**Barrel Exports**: Consistent use of `index.ts` files to create clean public APIs and simplify imports.
+
+**MSW for Development**: Mock Service Worker initializes in the root layout before rendering to prevent race conditions, enabling frontend development without a backend.
+
+**TanStack Query**: Handles data fetching, caching, background updates, and optimistic updates with minimal boilerplate.
+
+**Functional Programming**: Adapters use pure functions for immutable data transformations, ensuring predictable behavior.
+
+## AI Tools and Models
+
+This frontend application does not use AI tools or models directly. The application is a data visualization and management interface that communicates with a backend API. Any AI processing would occur on the backend service, not in this frontend codebase.
